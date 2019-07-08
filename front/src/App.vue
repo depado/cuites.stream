@@ -1,24 +1,19 @@
 <template>
   <div id="app">
-    <div class="container">
-      <nav-bar></nav-bar>
-      <CuiteList></CuiteList>
-    </div>
+    <nav-bar></nav-bar>
+    <router-view/>
   </div>
 </template>
 
 <script>
-import NavBar from "./components/NavBar.vue";
-import CuiteList from "./components/CuiteList.vue";
-
+import NavBar from "@/components/NavBar.vue";
 export default {
-  name: "app",
   components: {
-    NavBar,
-    CuiteList
+    NavBar
   }
-};
+}
 </script>
+
 
 <style>
 </style>

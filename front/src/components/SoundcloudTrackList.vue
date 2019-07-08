@@ -3,9 +3,9 @@
     <b-notification :closable="false" v-if="loading">
       <b-loading :is-full-page="true" :active.sync="loading" :can-cancel="false"></b-loading>
     </b-notification>
-    <div class="columns is-multiline" id="playlists" v-if="!loading">
-      <div class="column is-one-quarter" v-for="playlist in playlists" :key="playlist.id">
-        <Cuite :playlist=playlist></Cuite>
+    <div class="columns is-multiline" id="tracks" v-if="!loading">
+      <div class="column is-half" v-for="track in tracks" :key="track.id">
+        <SoundcloudTrack :track="track"></SoundcloudTrack>
       </div>
     </div>
   </div>
@@ -13,33 +13,35 @@
 
 <script>
 import axios from "axios";
-import Cuite from "./Cuite.vue";
+import SoundcloudTrack from "./SoundcloudTrack.vue";
 
 export default {
   components: {
-    Cuite
+    SoundcloudTrack
   },
   data() {
     return {
-      playlists: null,
-      loading: true
+      tracks: null,
+      loading: true,
+      error: null
     };
   },
   created() {
     axios
-      .get("http://localhost:8081/cuites")
+      .get("http://localhost:8081/tracks")
       .then(response => {
-        this.playlists = response.data;
+        this.tracks = response.data;
         this.$toast.open({
-          message: "I got the playlists",
+          message: "I got the tracks",
           type: "is-success",
           position: "is-bottom"
         });
       })
       .catch(error => {
+        this.error = error;
         this.$toast.open({
           duration: 5000,
-          message: `Unable to retrieve playlists`,
+          message: `Unable to retrieve tracks`,
           position: "is-bottom",
           type: "is-danger"
         });
@@ -48,3 +50,6 @@ export default {
   }
 };
 </script>
+
+<style>
+</style>

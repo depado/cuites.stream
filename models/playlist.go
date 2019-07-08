@@ -1,6 +1,8 @@
 package models
 
 import (
+	"strings"
+
 	"github.com/yanatan16/golang-soundcloud/soundcloud"
 )
 
@@ -72,6 +74,7 @@ func FormatPlaylist(p *soundcloud.Playlist, tracks bool) *Playlist {
 		ReleaseYear:  p.ReleaseYear,
 		PlaylistType: p.PlaylistType,
 	}
+	pp.ArtworkURL = strings.Replace(pp.ArtworkURL, "large.jpg", "original.jpg", 1)
 	if tracks {
 		pp.Tracks = FormatTracks(p.Tracks)
 	}

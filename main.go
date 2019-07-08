@@ -9,7 +9,6 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"github.com/logrusorgru/aurora"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
@@ -25,8 +24,6 @@ var (
 	Version = "unknown"
 	Build   = "unknown"
 )
-
-var desc = `DepadoFM is a client to listen to SoundCloud`
 
 func find(c *soundcloud.Api, id uint64) ([]*soundcloud.Playlist, error) {
 	var out, pl []*soundcloud.Playlist
@@ -57,33 +54,20 @@ func fetch(c *soundcloud.Api) ([]*soundcloud.Playlist, error) {
 	return out, nil
 }
 
-func findCuite(c *soundcloud.Api, id uint64) {
-	pl, err := c.User(id).Playlists(url.Values{})
-	if err != nil {
-		logrus.WithError(err).Fatal("Couldn't fetch playlists")
+func tracks(pp []*soundcloud.Playlist) []*soundcloud.Track {
+	tracks := []*soundcloud.Track{}
+	for _, p := range pp {
+		tracks = append(tracks, p.Tracks...)
 	}
-	for _, p := range pl {
-		if strings.HasPrefix(p.Title, "cuite.v") {
-			fmt.Println(aurora.Yellow(p.Title))
-			for i, t := range p.Tracks {
-				if i != len(p.Tracks)-1 {
-					fmt.Println("├─", aurora.Cyan(t.Title))
-					fmt.Printf("│  %s   🗨 %d   %s %d\n", time.Duration(t.Duration)*time.Millisecond, t.CommentCount, aurora.Red("♥"), t.FavoritingsCount)
-				} else {
-					fmt.Println("└─", aurora.Cyan(t.Title))
-					fmt.Printf("   %s   🗨 %d   %s %d\n", time.Duration(t.Duration)*time.Millisecond, t.CommentCount, aurora.Red("♥"), t.FavoritingsCount)
-				}
-			}
-		}
-	}
+	return tracks
 }
 
 // Main command that will be run when no other command is provided on the
 // command-line
 var rootc = &cobra.Command{
-	Use:   "depadofm <options>",
-	Short: "DepadoFM is a client to listen to SoundCloud",
-	Long:  desc,
+	Use:   "cuitesite <options>",
+	Short: "Cuitesite backend",
+	Long:  "Backend app that will aggregate playlists",
 	Run: func(cmd *cobra.Command, args []string) {
 		c := &soundcloud.Api{
 			ClientId: viper.GetString("client_id"),
@@ -93,8 +77,8 @@ var rootc = &cobra.Command{
 		if err != nil {
 			logrus.WithError(err).Fatal("Unable to fetch playlists")
 		}
-
-		gr := router.GinRouter{Cuites: pl}
+		t := tracks(pl)
+		gr := router.GinRouter{Playlists: pl, Tracks: t}
 
 		r := gin.Default()
 		r.Use(cors.New(cors.Config{
@@ -104,7 +88,9 @@ var rootc = &cobra.Command{
 			AllowHeaders:     []string{"Origin", "Authorization", "Content-Type"},
 			AllowAllOrigins:  true,
 		}))
-		r.GET("/cuites", gr.GetPlaylists)
+
+		r.GET("/playlists", gr.GetPlaylists)
+		r.GET("/tracks", gr.GetAllTracks)
 		r.Run("127.0.0.1:8081")
 	},
 }
