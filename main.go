@@ -3,19 +3,16 @@ package main
 import (
 	"fmt"
 	"log"
-	"net/url"
-	"strings"
 	"time"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"github.com/yanatan16/golang-soundcloud/soundcloud"
 
 	"github.com/Depado/cuitesite/cmd"
+	"github.com/Depado/cuitesite/fetch"
 	"github.com/Depado/cuitesite/router"
 )
 
@@ -25,43 +22,6 @@ var (
 	Build   = "unknown"
 )
 
-func find(c *soundcloud.Api, id uint64) ([]*soundcloud.Playlist, error) {
-	var out, pl []*soundcloud.Playlist
-	var err error
-
-	if pl, err = c.User(id).Playlists(url.Values{}); err != nil {
-		return out, errors.Wrapf(err, "fetch playlists for %d", id)
-	}
-	for _, p := range pl {
-		if strings.HasPrefix(p.Title, "cuite.v") {
-			out = append(out, p)
-		}
-	}
-	return out, nil
-}
-
-func fetch(c *soundcloud.Api) ([]*soundcloud.Playlist, error) {
-	var out []*soundcloud.Playlist
-
-	ids := []uint64{17771323, 93734268, 20836701, 153939520, 39713634}
-	for _, id := range ids {
-		p, err := find(c, id)
-		if err != nil {
-			return out, errors.Wrap(err, "fetch")
-		}
-		out = append(out, p...)
-	}
-	return out, nil
-}
-
-func tracks(pp []*soundcloud.Playlist) []*soundcloud.Track {
-	tracks := []*soundcloud.Track{}
-	for _, p := range pp {
-		tracks = append(tracks, p.Tracks...)
-	}
-	return tracks
-}
-
 // Main command that will be run when no other command is provided on the
 // command-line
 var rootc = &cobra.Command{
@@ -69,16 +29,11 @@ var rootc = &cobra.Command{
 	Short: "Cuitesite backend",
 	Long:  "Backend app that will aggregate playlists",
 	Run: func(cmd *cobra.Command, args []string) {
-		c := &soundcloud.Api{
-			ClientId: viper.GetString("client_id"),
+		fc := fetch.NewClient(viper.GetString("client_id"), []uint64{17771323, 93734268, 20836701, 153939520, 39713634})
+		if err := fc.Fetch(); err != nil {
+			logrus.WithError(err).Fatal("Unable to fetch content from Soundcloud")
 		}
-
-		pl, err := fetch(c)
-		if err != nil {
-			logrus.WithError(err).Fatal("Unable to fetch playlists")
-		}
-		t := tracks(pl)
-		gr := router.GinRouter{Playlists: pl, Tracks: t}
+		gr := router.GinRouter{Playlists: fc.Playlists, Tracks: fc.Tracks}
 
 		r := gin.Default()
 		r.Use(cors.New(cors.Config{
