@@ -1,7 +1,9 @@
 <template>
-  <div id="app" class="container">
+  <div id="app">
     <nav-bar></nav-bar>
-    <router-view/>
+    <div class="container">
+      <router-view />
+    </div>
   </div>
 </template>
 
@@ -11,9 +13,13 @@ export default {
   components: {
     NavBar
   }
-}
+};
 </script>
 
 
 <style>
+html {
+  background-image: url(/bg.png);
+  background-repeat: repeat;
+}
 </style>

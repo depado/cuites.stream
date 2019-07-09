@@ -1,23 +1,9 @@
 <template>
-  <nav class="navbar" role="navigation" aria-label="main navigation">
-    <div class="navbar-brand">
-      <a
-        role="button"
-        class="navbar-burger burger"
-        aria-label="menu"
-        aria-expanded="false"
-        data-target="navbarBasicExample"
-      >
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-      </a>
-    </div>
-
+  <nav class="navbar is-info" role="navigation" aria-label="main navigation">
     <div class="navbar-menu">
       <div class="navbar-start">
-        <router-link to="/" class="navbar-item">Playlists</router-link>
-        <router-link to="/tracks" class="navbar-item">Tracks</router-link>
+          <router-link to="/" class="navbar-item"><b-icon icon="playlist-music"></b-icon>&nbsp;&nbsp;Playlists</router-link>
+          <router-link to="/tracks" class="navbar-item"><b-icon icon="library-music"></b-icon>&nbsp;&nbsp;Tracks</router-link>
       </div>
     </div>
   </nav>
@@ -30,5 +16,8 @@ export default {};
 <style>
 nav {
   margin-bottom: 10px;
+}
+.router-link-exact-active {
+  background-color: #0e71de;
 }
 </style>

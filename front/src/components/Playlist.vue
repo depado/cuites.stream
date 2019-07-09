@@ -1,7 +1,7 @@
 <template>
   <article class="media">
     <figure class="media-left">
-      <p class="image is-128x128" >
+      <p class="image is-128x128">
         <img :src="playlist.artwork_url" alt="Playlist Artwork" />
       </p>
     </figure>
@@ -16,11 +16,9 @@
               {{ duration_str }}
             </small>
           </p>
-          <p>
-            <a :href="playlist.user.permalink_url">
-              <img class="image is-48x48 avatar" :src="playlist.user.avatar_url" />
-            </a>
-          </p>
+          <a :href="playlist.user.permalink_url" class="inline">
+            <img class="image is-48x48 avatar" :src="playlist.user.avatar_url" />
+          </a>
         </div>
         <p class="column">
           <b-taglist>
@@ -67,7 +65,7 @@ export default {
 }
 
 article {
-  border-width: 1px;
+  background-color: white;
   padding: 5px;
   border-radius: 5px;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
@@ -77,5 +75,9 @@ article {
   border-radius: 10%;
   display: flex;
   align-items: center;
+}
+
+.inline {
+  display: inline-flex;
 }
 </style>
