@@ -1,7 +1,5 @@
 <template>
-  <div class="container">
-    <SoundcloudTrackList></SoundcloudTrackList>
-  </div>
+  <SoundcloudTrackList></SoundcloudTrackList>
 </template>
 
 <script>

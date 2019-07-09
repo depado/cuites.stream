@@ -1,10 +1,21 @@
 <template>
-  <div>
-    <b-notification :closable="false" v-if="loading">
-      <b-loading :is-full-page="true" :active.sync="loading" :can-cancel="false"></b-loading>
-    </b-notification>
-    <div class="columns is-multiline" id="tracks" v-if="!loading">
-      <div class="column is-half" v-for="track in tracks" :key="track.id">
+  <b-notification :closable="false" v-if="loading">
+    <b-loading :is-full-page="true" :active.sync="loading" :can-cancel="false"></b-loading>
+  </b-notification>
+  <div v-else>
+    <p class="control has-icons-left">
+      <input class="input is-rounded" v-model="filter" type="text" placeholder="Search…" />
+      <span class="icon is-small is-left">
+        <b-icon icon="magnify" size="is-small"></b-icon>
+      </span>
+    </p>
+    <div v-if="filtered" class="columns is-multiline">
+      <div class="column is-half" v-for="(track, i) in filtered" :key="`${i}-${track.id}`">
+        <SoundcloudTrack :track="track"></SoundcloudTrack>
+      </div>
+    </div>
+    <div v-else class="columns is-multiline">
+      <div class="column is-half" v-for="(track, i) in tracks" :key="`${i}-${track.id}`">
         <SoundcloudTrack :track="track"></SoundcloudTrack>
       </div>
     </div>
@@ -23,22 +34,27 @@ export default {
     return {
       tracks: null,
       loading: true,
-      error: null
+      filter: null
     };
+  },
+  computed: {
+    filtered: function() {
+      if (this.filter) {
+        return this.tracks.filter(t =>
+          t.title.toLowerCase().includes(this.filter.toLowerCase())
+        );
+      } else {
+        return null;
+      }
+    }
   },
   created() {
     axios
       .get("http://localhost:8081/tracks")
       .then(response => {
         this.tracks = response.data;
-        this.$toast.open({
-          message: "I got the tracks",
-          type: "is-success",
-          position: "is-bottom"
-        });
       })
-      .catch(error => {
-        this.error = error;
+      .catch(() => {
         this.$toast.open({
           duration: 5000,
           message: `Unable to retrieve tracks`,
@@ -52,4 +68,7 @@ export default {
 </script>
 
 <style>
+.control {
+  margin-bottom: 10px;
+}
 </style>

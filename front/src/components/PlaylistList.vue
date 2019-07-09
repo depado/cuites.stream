@@ -1,11 +1,22 @@
 <template>
-  <div>
-    <b-notification :closable="false" v-if="loading">
-      <b-loading :is-full-page="true" :active.sync="loading" :can-cancel="false"></b-loading>
-    </b-notification>
-    <div class="columns is-multiline" id="playlists" v-if="!loading">
+  <b-notification :closable="false" v-if="loading">
+    <b-loading :is-full-page="true" :active.sync="loading" :can-cancel="false"></b-loading>
+  </b-notification>
+  <div v-else>
+    <p class="control has-icons-left">
+      <input class="input is-rounded" v-model="filter" type="text" placeholder="Search…" />
+      <span class="icon is-small is-left">
+        <b-icon icon="magnify" size="is-small"></b-icon>
+      </span>
+    </p>
+    <div v-if="filtered" class="columns is-multiline" >
+      <div class="column is-full" v-for="playlist in filtered" :key="playlist.id">
+        <Playlist :playlist="playlist"></Playlist>
+      </div>
+    </div>
+    <div v-else class="columns is-multiline">
       <div class="column is-full" v-for="playlist in playlists" :key="playlist.id">
-        <Playlist :playlist=playlist></Playlist>
+        <Playlist :playlist="playlist"></Playlist>
       </div>
     </div>
   </div>
@@ -23,22 +34,25 @@ export default {
     return {
       playlists: null,
       loading: true,
-      error: null,
+      filter: null
     };
+  },
+  computed: {
+     filtered: function() {
+       if(this.filter) {
+         return this.playlists.filter(p => p.title.toLowerCase().includes(this.filter.toLowerCase()));
+       } else {
+         return null
+       }
+     }
   },
   created() {
     axios
       .get("http://localhost:8081/playlists")
       .then(response => {
         this.playlists = response.data;
-        this.$toast.open({
-          message: "I got the playlists",
-          type: "is-success",
-          position: "is-bottom"
-        });
       })
-      .catch(error => {
-        this.error = error;
+      .catch(() => {
         this.$toast.open({
           duration: 5000,
           message: `Unable to retrieve playlists`,
@@ -50,3 +64,9 @@ export default {
   }
 };
 </script>
+
+<style>
+.control {
+  margin-bottom: 10px;
+}
+</style>

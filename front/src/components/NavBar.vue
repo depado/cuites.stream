@@ -14,7 +14,7 @@
       </a>
     </div>
 
-    <div id="navbarBasicExample" class="navbar-menu">
+    <div class="navbar-menu">
       <div class="navbar-start">
         <router-link to="/" class="navbar-item">Playlists</router-link>
         <router-link to="/tracks" class="navbar-item">Tracks</router-link>
@@ -29,6 +29,6 @@ export default {};
 
 <style>
 nav {
-  padding-bottom: 10px;
+  margin-bottom: 10px;
 }
 </style>

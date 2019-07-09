@@ -1,7 +1,5 @@
 <template>
-  <div class="container">
-    <PlaylistList></PlaylistList>  
-  </div>
+  <PlaylistList></PlaylistList>
 </template>
 
 <script>
