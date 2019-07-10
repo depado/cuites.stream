@@ -1,31 +1,24 @@
 <template>
-  <article class="media">
-    <figure class="media-left">
-      <p class="image is-64x64">
-        <a :href="track.permalink_url">
-          <img :src="artwork" alt="Track Artwork" />
-        </a>
-      </p>
-    </figure>
-    <div class="media-content">
-      <div class="content">
-        <p>
-          <a class="is-title is-2" :href="track.permalink_url">{{ track.title }}</a>
-          <a class="is-pulled-right" :href="track.user.permalink_url">
-            <small>
-              <b-icon icon="account" size="is-small"></b-icon>
-              {{ track.user.username }}
-            </small>
-          </a>
+  <div class="box">
+    <div class="columns is-mobile">
+      <div class="column is-one-fifth">
+        <img :src="artwork" class="image" alt="Track Artwork" />
+      </div>
+      <div class="column">
+        <p class="metadata">
+          <a :href="track.permalink_url">{{ track.title }}</a>
           <br />
           <small>
             <b-icon icon="clock-outline" size="is-small"></b-icon>
             {{ duration_str }}
+            <br />
+            <b-icon icon="account" size="is-small"></b-icon>
+            {{ track.user.username }}
           </small>
         </p>
       </div>
     </div>
-  </article>
+  </div>
 </template>
 
 <script>
@@ -57,21 +50,20 @@ export default {
 </script>
 
 <style scoped>
-.image > img {
-  border-radius: 5px;
+a {
+  color: #167df0;
 }
 
-article {
-  background-color: white;
-  padding: 5px;
-  border-radius: 5px;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+img {
+  border-radius: 4px;
 }
 
-.avatar {
-  border-radius: 10%;
-  display: flex;
-  align-items: center;
+small {
+  color: grey;
+}
+
+.box {
+  padding: 0.5rem;
 }
 </style>
 

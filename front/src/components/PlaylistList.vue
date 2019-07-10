@@ -10,12 +10,12 @@
       </span>
     </p>
     <div v-if="filtered" class="columns is-multiline" >
-      <div class="column is-full" v-for="playlist in filtered" :key="playlist.id">
+      <div class="column is-half" v-for="playlist in filtered" :key="playlist.id">
         <Playlist :playlist="playlist"></Playlist>
       </div>
     </div>
     <div v-else class="columns is-multiline">
-      <div class="column is-full" v-for="playlist in playlists" :key="playlist.id">
+      <div class="column is-half" v-for="playlist in playlists" :key="playlist.id">
         <Playlist :playlist="playlist"></Playlist>
       </div>
     </div>
@@ -40,7 +40,7 @@ export default {
   computed: {
      filtered: function() {
        if(this.filter) {
-         return this.playlists.filter(p => p.title.toLowerCase().includes(this.filter.toLowerCase()));
+         return this.playlists.filter(p => p.title.toLowerCase().includes(this.filter.toLowerCase()) || p.user.username.toLowerCase().includes(this.filter.toLowerCase()));
        } else {
          return null
        }

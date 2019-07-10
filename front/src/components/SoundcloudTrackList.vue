@@ -40,8 +40,10 @@ export default {
   computed: {
     filtered: function() {
       if (this.filter) {
-        return this.tracks.filter(t =>
-          t.title.toLowerCase().includes(this.filter.toLowerCase())
+        return this.tracks.filter(
+          t =>
+            t.title.toLowerCase().includes(this.filter.toLowerCase()) ||
+            t.user.username.toLowerCase().includes(this.filter.toLowerCase())
         );
       } else {
         return null;

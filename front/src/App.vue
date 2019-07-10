@@ -19,7 +19,6 @@ export default {
 
 <style>
 html {
-  background-image: url(/bg.png);
-  background-repeat: repeat;
+  background-color: #f5f5f5 !important;
 }
 </style>

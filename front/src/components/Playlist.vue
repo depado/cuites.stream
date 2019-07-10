@@ -1,33 +1,32 @@
 <template>
-  <article class="media">
-    <figure class="media-left">
-      <p class="image is-128x128">
-        <img :src="playlist.artwork_url" alt="Playlist Artwork" />
-      </p>
-    </figure>
-    <div class="media-content">
-      <div class="content columns">
-        <div class="column">
-          <p>
-            <a class="is-title is-3" :href="playlist.permalink_url">{{ playlist.title }}</a>
-            <br />
-            <small>
-              <b-icon icon="clock-outline" size="is-small"></b-icon>
-              {{ duration_str }}
-            </small>
-          </p>
-          <a :href="playlist.user.permalink_url" class="inline">
-            <img class="image is-48x48 avatar" :src="playlist.user.avatar_url" />
+  <div class="box">
+    <div class="columns is-mobile">
+      <div class="column is-one-quarter">
+        <img :src="playlist.artwork_url" class="image" alt="Playlist Artwork" />
+      </div>
+      <div class="column">
+        <p>
+          <a :href="playlist.user.permalink_url" class="is-pulled-right">
+            <img class="image is-48x48" :src="playlist.user.avatar_url" />
           </a>
-        </div>
-        <p class="column">
-          <b-taglist>
-            <b-tag v-for="tag in tags" :key="tag" type="is-info">#{{ tag }}</b-tag>
-          </b-taglist>
+          <strong>
+            <a :href="playlist.permalink_url">{{ playlist.title }}</a>
+          </strong>
+          <br />
+          <small>
+            <b-icon icon="clock-outline" size="is-small"></b-icon>
+            {{ duration_str }}
+            <br />
+            <b-icon icon="account" size="is-small"></b-icon>
+            {{ playlist.user.username }}
+            <br />
+            <b-icon icon="calendar" size="is-small"></b-icon>
+            {{ just_date }}
+          </small>
         </p>
       </div>
     </div>
-  </article>
+  </div>
 </template>
 
 <script>
@@ -48,36 +47,24 @@ export default {
 
       return hours + ":" + minutes + ":" + seconds + "." + milliseconds;
     },
-    tags: function() {
-      if ("tag_list" in this.playlist) {
-        return this.playlist.tag_list.split(" ");
-      } else {
-        return null;
-      }
+    just_date: function() {
+      return this.playlist.created_at.split(" ", 1)[0];
     }
   }
 };
 </script>
 
 <style scoped>
-.image > img {
-  border-radius: 5px;
+a {
+  color: #167df0;
 }
-
-article {
-  background-color: white;
-  padding: 5px;
-  border-radius: 5px;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+img {
+  border-radius: 4px;
 }
-
-.avatar {
-  border-radius: 10%;
-  display: flex;
-  align-items: center;
+small {
+  color: grey;
 }
-
-.inline {
-  display: inline-flex;
+.box {
+  padding: 0.5rem;
 }
 </style>
