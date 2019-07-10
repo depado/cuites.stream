@@ -11,7 +11,7 @@
           <small>
             <b-icon icon="clock-outline" size="is-small"></b-icon>
             {{ duration_str }}
-            <br />
+            <br v-if="!small" />
             <b-icon icon="account" size="is-small"></b-icon>
             {{ track.user.username }}
           </small>
@@ -24,7 +24,8 @@
 <script>
 export default {
   props: {
-    track: Object
+    track: Object,
+    small: Boolean
   },
   computed: {
     artwork: function() {

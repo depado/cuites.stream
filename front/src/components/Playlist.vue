@@ -23,16 +23,76 @@
             <b-icon icon="calendar" size="is-small"></b-icon>
             {{ just_date }}
           </small>
+          <br />
+          <a @click="fetch_tracks(playlist.id)">
+            <b-icon icon="library-music" size="is-small"></b-icon> Tracklist
+          </a>
         </p>
+        <b-notification :closable="false" v-if="loading">
+          <b-loading :is-full-page="true" :active.sync="loading" :can-cancel="false"></b-loading>
+        </b-notification>
+        <div v-if="modal_active" class="modal" :class="{'is-active': modal_active}">
+          <div class="modal-background"></div>
+          <div class="modal-content">
+            <div class="container breathe">
+              <div class="columns is-multiline">
+                <div class="column is-half" v-for="(track, i) in tracks" :key="`${i}-${track.id}`">
+                  <SoundcloudTrack :track="track" :small="true"></SoundcloudTrack>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button class="modal-close is-large" aria-label="close" @click="close_modal"></button>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import axios from "axios";
+import SoundcloudTrack from "./SoundcloudTrack";
+
 export default {
   props: {
     playlist: Object
+  },
+  components: {
+    SoundcloudTrack
+  },
+  data() {
+    return {
+      loading: false,
+      tracks: null,
+      modal_active: false
+    };
+  },
+  methods: {
+    close_modal: function() {
+      this.modal_active = false;
+      document.querySelector('html').classList.remove('is-clipped');
+    },
+    fetch_tracks: function(id) {
+      this.loading = true;
+      document.querySelector('html').classList.add('is-clipped');
+      axios
+        .get(this.apiURL()+"/playlist/" + this.playlist.id + "/tracks")
+        .then(response => {
+          this.modal_active = true;
+          this.tracks = response.data;
+        })
+        .catch(() => {
+          this.$toast.open({
+            duration: 5000,
+            message: `Unable to retrieve tracks`,
+            position: "is-bottom",
+            type: "is-danger"
+          });
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    }
   },
   computed: {
     duration_str: function() {
@@ -66,5 +126,10 @@ small {
 }
 .box {
   padding: 0.5rem;
+}
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+  .breathe {
+    margin-right: 50px;
+  }
 }
 </style>

@@ -51,8 +51,9 @@ export default {
     }
   },
   created() {
+    console.log(this.apiURL());
     axios
-      .get("http://localhost:8081/tracks")
+      .get(this.apiURL()+"/tracks")
       .then(response => {
         this.tracks = response.data;
       })

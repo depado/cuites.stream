@@ -48,7 +48,7 @@ export default {
   },
   created() {
     axios
-      .get("http://localhost:8081/playlists")
+      .get(this.apiURL()+"/playlists")
       .then(response => {
         this.playlists = response.data;
       })

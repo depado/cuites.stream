@@ -3,11 +3,20 @@ import App from './App.vue'
 import Buefy from 'buefy'
 import 'buefy/dist/buefy.css'
 import router from './router'
-// import VueFuse from 'vue-fuse'
 
 Vue.config.productionTip = false
 Vue.use(Buefy)
-// Vue.use(VueFuse)
+Vue.mixin({
+  methods: {
+    apiURL: function () {
+      let url = process.env.VUE_APP_API_PROTOCOL + "://" + process.env.VUE_APP_API_HOST;
+      if (process.env.VUE_APP_API_PORT) {
+        url = url + ":" + process.env.VUE_APP_API_PORT;
+      }
+      return url
+    }
+  }
+})
 
 new Vue({
   router,

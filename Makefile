@@ -1,7 +1,7 @@
 .DEFAULT_GOAL := build
 
 export CGO_ENABLED=0
-BINARY=depadofm
+BINARY=cuitesite
 VERSION=$(shell git describe --abbrev=0 --tags 2> /dev/null || echo "0.1.0")
 BUILD=$(shell git rev-parse HEAD 2> /dev/null || echo "undefined")
 LDFLAGS=-ldflags "-X main.Version=$(VERSION) -X main.Build=$(BUILD)"
@@ -13,6 +13,10 @@ help:
 .PHONY: build
 build: ## Build
 	go build -o $(BINARY) $(LDFLAGS)
+
+.PHONY: armbuild
+armbuild: ## Build a version for ARM
+	GOARCH=arm GOARM=5 go build -o $(BINARY) $(LDFLAGS)
 
 .PHONY: install
 install: ## Build and install

@@ -21,4 +21,8 @@ export default {
 html {
   background-color: #f5f5f5 !important;
 }
+.columns {
+  margin-right: 0 !important;
+  margin-left: 0 !important;
+}
 </style>

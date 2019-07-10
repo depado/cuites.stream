@@ -3,16 +3,15 @@ package main
 import (
 	"fmt"
 	"log"
-	"time"
+	"strconv"
 
-	"github.com/gin-contrib/cors"
-	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
 	"github.com/Depado/cuitesite/cmd"
 	"github.com/Depado/cuitesite/fetch"
+	"github.com/Depado/cuitesite/infra"
 	"github.com/Depado/cuitesite/router"
 )
 
@@ -28,26 +27,7 @@ var rootc = &cobra.Command{
 	Use:   "cuitesite <options>",
 	Short: "Cuitesite backend",
 	Long:  "Backend app that will aggregate playlists",
-	Run: func(cmd *cobra.Command, args []string) {
-		fc := fetch.NewClient(viper.GetString("client_id"), []uint64{17771323, 93734268, 20836701, 153939520, 39713634})
-		if err := fc.Fetch(); err != nil {
-			logrus.WithError(err).Fatal("Unable to fetch content from Soundcloud")
-		}
-		gr := router.GinRouter{Playlists: fc.Playlists, Tracks: fc.Tracks}
-
-		r := gin.Default()
-		r.Use(cors.New(cors.Config{
-			AllowCredentials: true,
-			MaxAge:           50 * time.Second,
-			AllowMethods:     []string{"GET", "PUT", "POST", "DELETE", "OPTION", "PATCH"},
-			AllowHeaders:     []string{"Origin", "Authorization", "Content-Type"},
-			AllowAllOrigins:  true,
-		}))
-
-		r.GET("/playlists", gr.GetPlaylists)
-		r.GET("/tracks", gr.GetAllTracks)
-		r.Run("127.0.0.1:8081")
-	},
+	Run:   func(cmd *cobra.Command, args []string) { run() },
 }
 
 // Version command that will display the build number and version (if any)
@@ -57,11 +37,44 @@ var versionc = &cobra.Command{
 	Run:   func(c *cobra.Command, args []string) { fmt.Printf("Build: %s\nVersion: %s\n", Build, Version) },
 }
 
+func run() {
+	strids := viper.GetStringSlice("user_ids")
+	ids := make([]int, len(strids))
+	for i := 0; i < len(strids); i++ {
+		var err error
+		if ids[i], err = strconv.Atoi(strids[i]); err != nil {
+			logrus.WithError(err).Fatal("not an integer ID")
+		}
+	}
+	s := infra.NewServer(
+		viper.GetString("server.host"),
+		viper.GetInt("server.port"),
+		viper.GetString("server.mode"),
+		infra.NewCorsConfig(
+			viper.GetBool("server.cors.disabled"),
+			viper.GetBool("server.cors.all"),
+			viper.GetStringSlice("server.cors.origins"),
+			viper.GetStringSlice("server.cors.methods"),
+			viper.GetStringSlice("server.cors.headers"),
+			viper.GetStringSlice("server.cors.expose"),
+		),
+	)
+	fc := fetch.NewClient(
+		viper.GetString("client_id"),
+		ids,
+	)
+	if err := fc.Fetch(); err != nil {
+		logrus.WithError(err).Fatal("Unable to fetch content from Soundcloud")
+	}
+	gr := &router.GinRouter{Playlists: fc.Playlists, Tracks: fc.Tracks, PlaylistsMap: &fc.PlaylistsMap}
+	gr.AddRoutes(s.Router)
+	s.Start()
+}
+
 func main() {
 	// Initialize Cobra and Viper
 	cobra.OnInitialize(cmd.Initialize)
-	cmd.AddLoggerFlags(rootc)
-	cmd.AddGlobalFlags(rootc)
+	cmd.AddAllFlags(rootc)
 
 	// Run the command
 	if err := rootc.Execute(); err != nil {
