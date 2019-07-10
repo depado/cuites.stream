@@ -39,7 +39,7 @@ export default {
   },
   computed: {
     filtered: function() {
-      if (this.filter) {
+      if (this.filter && this.filter.length > 2) {
         return this.tracks.filter(
           t =>
             t.title.toLowerCase().includes(this.filter.toLowerCase()) ||
