@@ -1,7 +1,7 @@
 <template>
   <div class="box">
     <div class="columns is-mobile">
-      <div class="column is-one-fifth">
+      <div class="column is-one-fifth rm-leftpad">
         <img :src="artwork" class="image" alt="Track Artwork" />
       </div>
       <div class="column">
@@ -64,7 +64,11 @@ small {
 }
 
 .box {
-  padding: 0.5rem;
+  padding: 0.3rem;
+}
+
+.rm-leftpad {
+  padding-left: 0;
 }
 </style>
 

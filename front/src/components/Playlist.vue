@@ -1,10 +1,10 @@
 <template>
   <div class="box">
     <div class="columns is-mobile">
-      <div class="column is-one-quarter">
+      <div class="column is-one-quarter rm-leftpad">
         <img :src="playlist.artwork_url" class="image" alt="Playlist Artwork" />
       </div>
-      <div class="column">
+      <div class="column rm-rightpad">
         <p>
           <a :href="playlist.user.permalink_url" class="is-pulled-right">
             <img class="image is-48x48" :src="playlist.user.avatar_url" />
@@ -124,8 +124,14 @@ img {
 small {
   color: grey;
 }
+.rm-leftpad {
+  padding-left: 0;
+}
+.rm-rightpad {
+  padding-right: 0;
+}
 .box {
-  padding: 0.5rem;
+  padding: 0.3rem;
 }
 @media screen and (min-width: 768px) and (max-width: 1024px) {
   .breathe {
