@@ -2,7 +2,16 @@
   <div class="box">
     <div class="columns is-mobile">
       <div class="column is-one-quarter rm-leftpad">
-        <img :src="playlist.artwork_url" class="image" alt="Playlist Artwork" />
+        <div class="overlay-image">
+          <img class="image" :src="playlist.artwork_url" alt="Alt text" />
+          <div class="hover">
+            <div class="text">
+              <a :href="playlist.user.permalink_url">
+                <b-icon icon="play-circle-outline" size="is-large"></b-icon>
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="column rm-rightpad">
         <p>
@@ -25,7 +34,7 @@
           </small>
           <br />
           <a @click="fetch_tracks(playlist.id)">
-            <b-icon icon="library-music" size="is-small"></b-icon> Tracklist
+            <b-icon icon="library-music" size="is-small"></b-icon>Tracklist
           </a>
         </p>
         <b-notification :closable="false" v-if="loading">
@@ -70,13 +79,13 @@ export default {
   methods: {
     close_modal: function() {
       this.modal_active = false;
-      document.querySelector('html').classList.remove('is-clipped');
+      document.querySelector("html").classList.remove("is-clipped");
     },
     fetch_tracks: function(id) {
       this.loading = true;
-      document.querySelector('html').classList.add('is-clipped');
+      document.querySelector("html").classList.add("is-clipped");
       axios
-        .get(this.apiURL()+"/playlist/" + this.playlist.id + "/tracks")
+        .get(this.apiURL() + "/playlist/" + this.playlist.id + "/tracks")
         .then(response => {
           this.modal_active = true;
           this.tracks = response.data;
@@ -118,6 +127,9 @@ export default {
 a {
   color: #167df0;
 }
+.hover > .text > a {
+  color: white;
+}
 img {
   border-radius: 4px;
 }
@@ -137,5 +149,41 @@ small {
   .breathe {
     margin-right: 50px;
   }
+}
+.overlay-image {
+  position: relative;
+  width: 100%;
+}
+.overlay-image .image {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.overlay-image .hover {
+  border-radius: 4px;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+  position: absolute;
+  text-align: center;
+  height: 100%;
+  opacity: 0;
+  color: white;
+  transition: 0.5s ease;
+  top: 0;
+}
+.overlay-image .text {
+  color: #fff;
+  font-size: 30px;
+  line-height: 1.5em;
+  text-shadow: 2px 2px 2px #000;
+  text-align: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+}
+.overlay-image:hover .hover {
+  opacity: 1;
 }
 </style>

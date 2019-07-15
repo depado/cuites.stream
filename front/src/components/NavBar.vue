@@ -1,9 +1,9 @@
 <template>
   <nav class="navbar is-info" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
-      <a class="navbar-item" href="https://bulma.io">
+      <span class="navbar-item">
         <img src="/fox.gif" />
-      </a>
+      </span>
       <a
         role="button"
         class="navbar-burger"
@@ -53,6 +53,7 @@ nav {
   margin-bottom: 10px;
 }
 .router-link-exact-active {
-  color: #0e71de;
+  background-color: #0e71de;
+  color: #fff;
 }
 </style>
