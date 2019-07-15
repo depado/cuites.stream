@@ -9,7 +9,7 @@
         <b-icon icon="magnify" size="is-small"></b-icon>
       </span>
     </p>
-    <div v-if="filtered" class="columns is-multiline" >
+    <div v-if="filtered" class="columns is-multiline">
       <div class="column is-half" v-for="playlist in filtered" :key="playlist.id">
         <Playlist :playlist="playlist"></Playlist>
       </div>
@@ -38,17 +38,21 @@ export default {
     };
   },
   computed: {
-     filtered: function() {
-       if(this.filter) {
-         return this.playlists.filter(p => p.title.toLowerCase().includes(this.filter.toLowerCase()) || p.user.username.toLowerCase().includes(this.filter.toLowerCase()));
-       } else {
-         return null
-       }
-     }
+    filtered: function() {
+      if (this.filter) {
+        return this.playlists.filter(
+          p =>
+            p.title.toLowerCase().includes(this.filter.toLowerCase()) ||
+            p.user.username.toLowerCase().includes(this.filter.toLowerCase())
+        );
+      } else {
+        return null;
+      }
+    }
   },
   created() {
     axios
-      .get(this.apiURL()+"/playlists")
+      .get(this.apiURL() + "/playlists")
       .then(response => {
         this.playlists = response.data;
       })

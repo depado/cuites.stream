@@ -8,7 +8,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/yanatan16/golang-soundcloud/soundcloud"
 
-	"github.com/Depado/cuitesite/models"
+	"github.com/Depado/cuites.stream/models"
 )
 
 // GetPlaylists will return the playlists in JSON format

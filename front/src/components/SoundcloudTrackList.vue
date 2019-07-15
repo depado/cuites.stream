@@ -51,7 +51,6 @@ export default {
     }
   },
   created() {
-    console.log(this.apiURL());
     axios
       .get(this.apiURL()+"/tracks")
       .then(response => {

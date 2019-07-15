@@ -9,10 +9,10 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
-	"github.com/Depado/cuitesite/cmd"
-	"github.com/Depado/cuitesite/fetch"
-	"github.com/Depado/cuitesite/infra"
-	"github.com/Depado/cuitesite/router"
+	"github.com/Depado/cuites.stream/cmd"
+	"github.com/Depado/cuites.stream/fetch"
+	"github.com/Depado/cuites.stream/infra"
+	"github.com/Depado/cuites.stream/router"
 )
 
 // Build number and versions injected at compile time
@@ -24,8 +24,8 @@ var (
 // Main command that will be run when no other command is provided on the
 // command-line
 var rootc = &cobra.Command{
-	Use:   "cuitesite <options>",
-	Short: "Cuitesite backend",
+	Use:   "cuites.stream <options>",
+	Short: "cuites.stream backend",
 	Long:  "Backend app that will aggregate playlists",
 	Run:   func(cmd *cobra.Command, args []string) { run() },
 }
