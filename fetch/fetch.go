@@ -1,6 +1,8 @@
 package fetch
 
 import (
+	"io/ioutil"
+	"net/http"
 	"net/url"
 	"regexp"
 	"sort"
@@ -8,6 +10,8 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/dghubble/sling"
 
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
@@ -21,6 +25,7 @@ type Client struct {
 	ids      []int
 	clientID string
 	c        *soundcloud.Api
+	hc       *http.Client
 
 	Playlists     []*soundcloud.Playlist
 	PlaylistsMap  sync.Map
@@ -52,6 +57,9 @@ func NewClient(clientID string, ids []int) *Client {
 		clientID: clientID,
 		c: &soundcloud.Api{
 			ClientId: clientID,
+		},
+		hc: &http.Client{
+			Timeout: time.Duration(5 * time.Second),
 		},
 	}
 }
@@ -97,4 +105,30 @@ func (c *Client) Find(id int) ([]*RichPlaylist, error) {
 		}
 	}
 	return out, nil
+}
+
+// Stream will retrieve a streamable content respecting SoundCloud's workflow
+func (c *Client) Stream(id string) ([]byte, error) {
+	var err error
+	var resp *http.Response
+	var req *http.Request
+
+	if req, err = sling.New().
+		Get("https://api.soundcloud.com/i1/tracks/" + id + "/streams").
+		QueryStruct(struct {
+			ClientID string `url:"client_id"`
+		}{ClientID: c.clientID}).
+		Request(); err != nil {
+		return nil, err
+	}
+	if resp, err = c.hc.Do(req); err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	bb, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	return bb, nil
 }

@@ -1,12 +1,12 @@
 <template>
-  <div class="box">
+  <div class="box squish" :class="{active: active}" @click="changeTrack">
     <div class="columns is-mobile">
       <div class="column is-one-fifth rm-leftpad">
         <img :src="artwork" class="image" alt="Track Artwork" />
       </div>
       <div class="column rm-rightpad">
-        <p class="metadata">
-          <a>{{ track.title }}</a>
+        <p>
+          {{ track.title }}
           <br />
           <small>
             <b-icon icon="clock-outline" size="is-small"></b-icon>
@@ -23,7 +23,14 @@
 <script>
 export default {
   props: {
-    track: Object
+    track: Object,
+    active: Boolean,
+    position: Number
+  },
+  methods: {
+    changeTrack: function() {
+      this.$store.commit("changeTrack", this.position);
+    }
   },
   computed: {
     artwork: function() {
@@ -49,8 +56,23 @@ export default {
 </script>
 
 <style scoped>
+.box.squish {
+  margin-bottom: 0;
+}
+.box.active {
+  background-color: white;
+  color: black;
+  border-radius: 0px;
+}
 .box {
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-radius: 0px;
   padding: 0.3rem;
+  cursor: pointer;
+  color: white;
+  background-color: transparent;
+  box-shadow: none;
 }
 
 .rm-leftpad {

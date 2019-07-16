@@ -38,3 +38,15 @@ func (r *GinRouter) GetPlaylistTracks(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, models.FormatTracks(p.(*soundcloud.Playlist).Tracks))
 }
+
+// GetStream gets a streamable URL
+func (r *GinRouter) GetStream(c *gin.Context) {
+	var err error
+	var out []byte
+	tid := c.Param("id")
+	if out, err = r.Fetcher.Stream(tid); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
+		return
+	}
+	c.Data(http.StatusOK, "application/json; charset=utf-8", out)
+}

@@ -6,7 +6,9 @@
       </div>
       <div class="column rm-rightpad">
         <p class="metadata">
-          <a v-if="addButton" class="is-pulled-right" @click="addTrack"><b-icon icon="playlist-plus"></b-icon></a>
+          <a v-if="addButton" class="is-pulled-right" @click="addTrack">
+            <b-icon icon="playlist-plus"></b-icon>
+          </a>
           <a :href="track.permalink_url">{{ track.title }}</a>
           <br />
           <small>
@@ -30,11 +32,17 @@ export default {
     addButton: {
       type: Boolean,
       default: true
-    },
+    }
   },
   methods: {
     addTrack: function() {
       this.$store.commit("pushTrack", this.track);
+      this.$toast.open({
+        duration: 1000,
+        message: `Added to playlist`,
+        position: "is-bottom",
+        type: "is-success"
+      });
     }
   },
   computed: {

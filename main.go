@@ -66,7 +66,12 @@ func run() {
 	if err := fc.Fetch(); err != nil {
 		logrus.WithError(err).Fatal("Unable to fetch content from Soundcloud")
 	}
-	gr := &router.GinRouter{Playlists: fc.Playlists, Tracks: fc.Tracks, PlaylistsMap: &fc.PlaylistsMap}
+	gr := &router.GinRouter{
+		Playlists:    fc.Playlists,
+		Tracks:       fc.Tracks,
+		PlaylistsMap: &fc.PlaylistsMap,
+		Fetcher:      fc,
+	}
 	gr.AddRoutes(s.Router)
 	s.Start()
 }

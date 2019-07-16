@@ -2,9 +2,9 @@
   <div>
     <div class="flex-container">
       <div class="flex-item cover">
-        <div>
-          <img v-if="!playing" src="/fox.gif" />
-          <img v-else :src="currentArtwork" />
+        <img v-if="!playing" src="/fox.gif" />
+        <div v-else>
+          <img :src="currentArtwork" />
           <p class="metadata">
             <a :href="currentTrack.permalink_url">{{ currentTrack.title }}</a>
             <br />
@@ -28,6 +28,12 @@
         <a v-if="playing" @click="togglePlay">
           <b-icon icon="pause"></b-icon>
         </a>
+        <b-loading
+          v-else-if="loading"
+          :is-full-page="false"
+          :active.sync="loading"
+          :can-cancel="false"
+        ></b-loading>
         <a v-else @click="togglePlay">
           <b-icon icon="play"></b-icon>
         </a>
@@ -43,7 +49,13 @@
       </a>
     </div>
     <div v-if="showTracks" class="playlist-tracklist">
-      <PlayerTrackList v-for="(track, i) in trackList" :key="`${i}-${track.id}`" :track="track"></PlayerTrackList>
+      <PlayerTrackList
+        v-for="(track, i) in trackList"
+        :key="`${i}-${track.id}`"
+        :track="track"
+        :active="i===current"
+        :position="i"
+      ></PlayerTrackList>
     </div>
   </div>
 </template>
@@ -53,6 +65,7 @@ import SoundcloudTrack from "./SoundcloudTrack";
 import PlayerTrackList from "./PlayerTrackList";
 import { mapState, mapGetters } from "vuex";
 import { Howl } from "howler";
+import axios from "axios";
 
 export default {
   name: "Player",
@@ -74,33 +87,56 @@ export default {
   data() {
     return {
       showTracks: false,
-      player: null
+      player: null,
+      loading: false
     };
   },
   watch: {
     currentTrack: function() {
+      console.log("changed")
+      this.loading = true;
       if (this.player) {
         this.player.pause();
         this.player = null;
       }
-      this.player = new Howl({
-        src: `${this.currentTrack.stream}?client_id=xxxx`,
-        html5: true,
-        volume: 1.0
-      });
-      this.player.play();
+      axios
+        .get(this.apiURL() + "/track/" + this.currentTrack.id + "/stream")
+        .then(response => {
+          this.player = new Howl({
+            src: response.data.http_mp3_128_url,
+            html5: true,
+            volume: 1.0,
+            onend: function() {
+              if(this.hasNext) {
+                this.$store.commit("next");
+              }
+            }
+          });
+          this.player.play();
+        })
+        .catch(() => {
+          this.$toast.open({
+            duration: 5000,
+            message: `Unable to retrieve stream`,
+            position: "is-bottom",
+            type: "is-danger"
+          });
+        })
+        .finally(() => (this.loading = false));
     },
     playing: function() {
-      if (this.playing) {
-        this.player.play();
-      } else {
-        this.player.pause();
+      if (this.player) {
+        if (this.playing) {
+          this.player.play();
+        } else {
+          this.player.pause();
+        }
       }
     }
   },
   computed: {
-    ...mapState(["trackList", "playing", "current"]),
-    ...mapGetters(["currentTrack", "hasNext", "hasPrev"]),
+    ...mapState(["trackList", "playing", "current", "currentTrack"]),
+    ...mapGetters(["hasNext", "hasPrev"]),
     currentArtwork: function() {
       if (this.currentTrack.artwork_url) {
         return this.currentTrack.artwork_url;
@@ -163,7 +199,7 @@ a {
   height: 58px;
   width: 100%;
   padding: 0px 20px;
-  background-color: #167df0;
+  background-color: rgb(22, 125, 240, 0.9);
 }
 
 .cover {
@@ -223,8 +259,7 @@ a {
   right: 10px;
   height: 50%;
   width: 40%;
-  padding: 10px 20px;
-  background-color: #167df0;
+  background-color: rgb(22, 125, 240, 0.9);
   border-top-left-radius: 6px;
   border-top-right-radius: 6px;
   overflow-y: auto;

@@ -6,7 +6,7 @@
           <img class="image" :src="playlist.artwork_url" alt="Alt text" />
           <div class="hover">
             <div class="text">
-              <a href="#" @click="addPlaylist">
+              <a @click="addPlaylist">
                 <b-icon icon="play-circle-outline" size="is-large"></b-icon>
               </a>
             </div>
@@ -87,6 +87,7 @@ export default {
             this.tracks.forEach(t => {
               this.$store.commit("pushTrack", t);
             });
+            this.$store.commit("reset");
             this.$store.commit("setPlaying", true);
           })
           .catch(() => {
@@ -102,6 +103,7 @@ export default {
         this.tracks.forEach(t => {
           this.$store.commit("pushTrack", t);
         });
+        this.$store.commit("reset");
         this.$store.commit("setPlaying", true);
       }
     },
