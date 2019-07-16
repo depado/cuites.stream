@@ -6,13 +6,11 @@
       </div>
       <div class="column rm-rightpad">
         <p class="metadata">
-          <a v-if="addButton" class="is-pulled-right" @click="addTrack"><b-icon icon="playlist-plus"></b-icon></a>
-          <a :href="track.permalink_url">{{ track.title }}</a>
+          <a>{{ track.title }}</a>
           <br />
           <small>
             <b-icon icon="clock-outline" size="is-small"></b-icon>
             {{ duration_str }}
-            <br v-if="!small" />
             <b-icon icon="account" size="is-small"></b-icon>
             {{ track.user.username }}
           </small>
@@ -25,17 +23,7 @@
 <script>
 export default {
   props: {
-    track: Object,
-    small: Boolean,
-    addButton: {
-      type: Boolean,
-      default: true
-    },
-  },
-  methods: {
-    addTrack: function() {
-      this.$store.commit("pushTrack", this.track);
-    }
+    track: Object
   },
   computed: {
     artwork: function() {
@@ -61,18 +49,6 @@ export default {
 </script>
 
 <style scoped>
-a {
-  color: #167df0;
-}
-
-img {
-  border-radius: 4px;
-}
-
-small {
-  color: grey;
-}
-
 .box {
   padding: 0.3rem;
 }
@@ -85,4 +61,3 @@ small {
   padding-right: 0;
 }
 </style>
-

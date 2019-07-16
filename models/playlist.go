@@ -35,6 +35,7 @@ func FormatTrack(t *soundcloud.Track) *Track {
 		DownloadCount:    t.DownloadCount,
 		PlaybackCount:    t.PlaybackCount,
 		FavoritingsCount: t.FavoritingsCount,
+		Stream:           t.StreamUrl,
 	}
 
 	if t.SubUri != nil {
@@ -143,6 +144,7 @@ type Track struct {
 	FavoritingsCount uint64 `json:"favoritings_count,omitempty"`
 	AssetData        []byte `json:"asset_data,omitempty"`
 	ArtworkData      []byte `json:"artwork_data,omitempty"`
+	Stream           string `json:"stream,omitempty"`
 }
 
 // Playlist represents a single playlist

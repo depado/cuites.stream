@@ -4,7 +4,13 @@
   </b-notification>
   <div v-else>
     <p class="control has-icons-left">
-      <input class="input is-rounded" v-model="filter" type="text" placeholder="Search…" />
+      <input
+        class="input is-rounded"
+        :value="filter"
+        @input="evt=>filter=evt.target.value"
+        type="text"
+        placeholder="Search…"
+      />
       <span class="icon is-small is-left">
         <b-icon icon="magnify" size="is-small"></b-icon>
       </span>
@@ -52,7 +58,7 @@ export default {
   },
   created() {
     axios
-      .get(this.apiURL()+"/tracks")
+      .get(this.apiURL() + "/tracks")
       .then(response => {
         this.tracks = response.data;
       })

@@ -1,7 +1,7 @@
 <h1 align="center">cuites.stream</h1>
 <h2 align="center">
   <img src="front/public/fox.gif" alt="mascot" height="50px">
-
+  
   [![forthebadge](https://forthebadge.com/images/badges/made-with-go.svg)](https://forthebadge.com)[![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://forthebadge.com)[![forthebadge](https://forthebadge.com/images/badges/uses-badges.svg)](https://forthebadge.com)
 
   ![Go Version](https://img.shields.io/badge/Go%20Version-latest-brightgreen.svg)
@@ -16,6 +16,10 @@
 ## Backend
 
 ### Install
+
+```sh
+$ git clone 
+```
 
 ### Setup
 

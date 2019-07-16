@@ -6,7 +6,7 @@
           <img class="image" :src="playlist.artwork_url" alt="Alt text" />
           <div class="hover">
             <div class="text">
-              <a :href="playlist.user.permalink_url">
+              <a href="#" @click="addPlaylist">
                 <b-icon icon="play-circle-outline" size="is-large"></b-icon>
               </a>
             </div>
@@ -33,7 +33,7 @@
             {{ just_date }}
           </small>
           <br />
-          <a @click="fetch_tracks(playlist.id)">
+          <a @click="fetch_tracks">
             <b-icon icon="library-music" size="is-small"></b-icon>Tracklist
           </a>
         </p>
@@ -77,30 +77,63 @@ export default {
     };
   },
   methods: {
+    addPlaylist: function() {
+      if (!this.tracks) {
+        axios
+          .get(this.apiURL() + "/playlist/" + this.playlist.id + "/tracks")
+          .then(response => {
+            this.tracks = response.data;
+            this.$store.commit("cleanTracks");
+            this.tracks.forEach(t => {
+              this.$store.commit("pushTrack", t);
+            });
+            this.$store.commit("setPlaying", true);
+          })
+          .catch(() => {
+            this.$toast.open({
+              duration: 5000,
+              message: `Unable to retrieve tracks`,
+              position: "is-bottom",
+              type: "is-danger"
+            });
+          });
+      } else {
+        this.$store.commit("cleanTracks");
+        this.tracks.forEach(t => {
+          this.$store.commit("pushTrack", t);
+        });
+        this.$store.commit("setPlaying", true);
+      }
+    },
     close_modal: function() {
       this.modal_active = false;
       document.querySelector("html").classList.remove("is-clipped");
     },
-    fetch_tracks: function(id) {
-      this.loading = true;
-      document.querySelector("html").classList.add("is-clipped");
-      axios
-        .get(this.apiURL() + "/playlist/" + this.playlist.id + "/tracks")
-        .then(response => {
-          this.modal_active = true;
-          this.tracks = response.data;
-        })
-        .catch(() => {
-          this.$toast.open({
-            duration: 5000,
-            message: `Unable to retrieve tracks`,
-            position: "is-bottom",
-            type: "is-danger"
+    fetch_tracks: function() {
+      if (!this.tracks) {
+        this.loading = true;
+        document.querySelector("html").classList.add("is-clipped");
+        axios
+          .get(this.apiURL() + "/playlist/" + this.playlist.id + "/tracks")
+          .then(response => {
+            this.modal_active = true;
+            this.tracks = response.data;
+          })
+          .catch(() => {
+            this.$toast.open({
+              duration: 5000,
+              message: `Unable to retrieve tracks`,
+              position: "is-bottom",
+              type: "is-danger"
+            });
+          })
+          .finally(() => {
+            this.loading = false;
           });
-        })
-        .finally(() => {
-          this.loading = false;
-        });
+      } else {
+        document.querySelector("html").classList.add("is-clipped");
+        this.modal_active = true;
+      }
     }
   },
   computed: {
