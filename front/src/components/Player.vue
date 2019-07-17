@@ -2,8 +2,7 @@
   <div>
     <div class="flex-container">
       <div class="flex-item cover">
-        <img v-if="!playing" src="/fox.gif" />
-        <div v-else>
+        <div v-if="playing || currentTrack">
           <img :src="currentArtwork" />
           <p class="metadata">
             <a :href="currentTrack.permalink_url">{{ currentTrack.title }}</a>
@@ -93,12 +92,12 @@ export default {
   },
   watch: {
     currentTrack: function() {
-      console.log("changed")
       this.loading = true;
       if (this.player) {
         this.player.pause();
         this.player = null;
       }
+      var _this = this;
       axios
         .get(this.apiURL() + "/track/" + this.currentTrack.id + "/stream")
         .then(response => {
@@ -107,9 +106,7 @@ export default {
             html5: true,
             volume: 1.0,
             onend: function() {
-              if(this.hasNext) {
-                this.$store.commit("next");
-              }
+              _this.$store.commit("next");
             }
           });
           this.player.play();
@@ -251,12 +248,18 @@ a {
   align-self: auto;
 }
 
+@media screen and (max-width: 768px) {
+  .playlist-tracklist {
+    width: 100% !important;
+  }
+}
+
 .playlist-tracklist {
   color: white;
   position: fixed;
   float: right;
   bottom: 58px;
-  right: 10px;
+  right: 0px;
   height: 50%;
   width: 40%;
   background-color: rgb(22, 125, 240, 0.9);

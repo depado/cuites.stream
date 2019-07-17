@@ -20,12 +20,16 @@ export default new Vuex.Store({
   },
   mutations: {
     next(state) {
-      state.current++;
-      state.currentTrack =state.trackList[state.current];
+      if(state.current < state.trackList.length) {
+        state.current++;
+        state.currentTrack =state.trackList[state.current];
+      }
     },
     previous(state) {
-      state.current--;
-      state.currentTrack =state.trackList[state.current];
+      if (state.current > 0) {
+        state.current--;
+        state.currentTrack =state.trackList[state.current];
+      } 
     },
     pushTrack(state, track) {
       state.trackList.push(track);

@@ -59,6 +59,11 @@ export default {
 .box.squish {
   margin-bottom: 0;
 }
+
+.box img {
+  border-radius: 4px;
+}
+
 .box.active {
   background-color: white;
   color: black;
