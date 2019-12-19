@@ -60,7 +60,6 @@
 </template>
 
 <script>
-import SoundcloudTrack from "./SoundcloudTrack";
 import PlayerTrackList from "./PlayerTrackList";
 import { mapState, mapGetters } from "vuex";
 import { Howl } from "howler";
@@ -69,7 +68,6 @@ import axios from "axios";
 export default {
   name: "Player",
   components: {
-    SoundcloudTrack,
     PlayerTrackList
   },
   methods: {
