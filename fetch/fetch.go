@@ -1,7 +1,7 @@
 package fetch
 
 import (
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 	"regexp"
@@ -50,7 +50,7 @@ func NewRichPlaylist(p *soundcloud.Playlist) *RichPlaylist {
 	return &RichPlaylist{p, 0}
 }
 
-// NewClient returns a new Clinet
+// NewClient returns a new Client
 func NewClient(clientID string, ids []int) *Client {
 	return &Client{
 		ids:      ids,
@@ -126,7 +126,7 @@ func (c *Client) Stream(id string) ([]byte, error) {
 	}
 	defer resp.Body.Close()
 
-	bb, err := ioutil.ReadAll(resp.Body)
+	bb, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}

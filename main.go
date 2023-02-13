@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"strconv"
 
@@ -28,13 +27,6 @@ var rootc = &cobra.Command{
 	Short: "cuites.stream backend",
 	Long:  "Backend app that will aggregate playlists",
 	Run:   func(cmd *cobra.Command, args []string) { run() },
-}
-
-// Version command that will display the build number and version (if any)
-var versionc = &cobra.Command{
-	Use:   "version",
-	Short: "Show build and version",
-	Run:   func(c *cobra.Command, args []string) { fmt.Printf("Build: %s\nVersion: %s\n", Build, Version) },
 }
 
 func run() {
