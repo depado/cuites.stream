@@ -21,7 +21,7 @@ require (
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/spf13/viper v1.7.1
-	github.com/tidwall/gjson v1.6.1 // indirect
+	github.com/tidwall/gjson v1.9.3 // indirect
 	github.com/ugorji/go v1.1.8 // indirect
 	github.com/yanatan16/golang-soundcloud v0.0.0-20161013200625-a182dd459b66
 	golang.org/x/sys v0.0.0-20200917073148-efd3b9a0ff20 // indirect
