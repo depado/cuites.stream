@@ -2164,9 +2164,9 @@ browserslist@^4.0.0, browserslist@^4.14.5, browserslist@^4.16.3, browserslist@^4
     update-browserslist-db "^1.0.10"
 
 buefy@^0.9.22:
-  version "0.9.23"
-  resolved "https://registry.yarnpkg.com/buefy/-/buefy-0.9.23.tgz#47819ed44781adcfb805e370f84988f37291d5fe"
-  integrity sha512-zkmTOUDlh7xx0ID8cSw3Wtm97nkTGU992TcIBBTC41rjKHjJTyQn9fYr8oqvVaCTLNVJmdPnnjDCuYZtHoDEog==
+  version "0.9.28"
+  resolved "https://registry.yarnpkg.com/buefy/-/buefy-0.9.28.tgz#12a82382292c85337a4154b30882c54bd92810ce"
+  integrity sha512-5K3UuZT2v4Gv3OXKrjZjlYNZJISwvzDHYYwNiBVzXY6c2QYxI1BmwQuXjSPqyvH5x7JvY9r38I6MRht5UurRVg==
   dependencies:
     bulma "0.9.4"
 
