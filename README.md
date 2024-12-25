@@ -6,7 +6,6 @@
 
   ![Go Version](https://img.shields.io/badge/Go%20Version-latest-brightgreen.svg)
   [![Go Report Card](https://goreportcard.com/badge/github.com/Depado/cuites.stream)](https://goreportcard.com/report/github.com/Depado/cuites.stream)
-  [![Build Status](https://drone.depa.do/api/badges/Depado/cuites.stream/status.svg)](https://drone.depa.do/Depado/cuites.stream)
   [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/Depado/cuites.stream/blob/master/LICENSE)
   [![Say Thanks!](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/Depado)
 
